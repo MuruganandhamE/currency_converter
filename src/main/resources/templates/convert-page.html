@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <style>
+        .container{
+            width: 100%;
+        }
+
+        .convert{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .fields{
+            display: flex;
+            flex-direction: row;
+            padding: 5px;
+            gap: 10px;
+        }
+
+       .field{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+       }
+
+       .btn{
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+       }
+
+       .msg{
+        display: flex;
+        justify-content: center;
+       }
+
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="convert">
+            <form th:action="@{/convert}" th:object="${currencyCoversionForm}" method="post">
+                <div class="fields">
+                    <div class="field">
+
+                        <label for="">Source Courency</label> 
+                        <select th:field="*{sourceCurrency}" id="sourceCurrency" required>
+                            <option value="">Select Currency</option>
+                            <option th:each="countryCode : ${countryCodes}" th:value="${countryCode}" th:text="${countryCode}"></option>
+                        </select> 
+                    </div>
+                    <div class="field">
+                        <label for="">Target Courency</label> 
+                    <select th:field="*{targetCurrency}" id="targetCurrency" required>
+                        <option value="">Select Currency</option>
+                        <option th:each="countryCode : ${countryCodes}" th:value="${countryCode}" th:text="${countryCode}"></option>
+                    </select>
+                    </div>
+                </div>
+                
+                <div class="fields">
+                    <div class="field">
+                        <label for="">Amount</label>
+                        <input type="number"  th:field="*{amount}" min="1" step="1" onkeypress="allowOnlyWholeNumbers(event) " required>
+                    </div>
+                    <div class="btn">
+                        <button type="submit">Convert</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+            <div class="msg">
+                <p th:if="${currencyCoversionForm.result!=null}">
+                    The <span th:text="${currencyCoversionForm.targetCurrency}"></span> amount for <span th:text="|${currencyCoversionForm.sourceCurrency} ${currencyCoversionForm.amount}|"></span> is <span th:text="|${currencyCoversionForm.targetCurrency} ${currencyCoversionForm.result}|"></span> 
+                </p>
+                
+                <p th:if="${currencyCoversionForm.message!=null}">
+                    <span th:text="${currencyCoversionForm.message}"></span>
+                </p>
+
+            
+           
+        </div>
+    </div>
+        
+    <script>
+        function allowOnlyWholeNumbers(event) {
+            if (event.which < 48 || event.which > 57) {
+                event.preventDefault();
+            }
+        }
+    </script>
+
+</body>
+
+</html>
